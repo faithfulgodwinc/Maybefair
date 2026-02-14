@@ -71,12 +71,12 @@ export function EmailDetailModal({ email, draft, isOpen, onClose }: EmailDetailM
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-4xl max-h-[90vh] p-0 gap-0 rounded-2xl overflow-hidden">
+            <DialogContent className="max-w-3xl max-h-[90vh] p-0 gap-0 rounded-2xl overflow-hidden">
                 {/* Header */}
                 <DialogHeader className="px-6 py-4 border-b border-border/40 bg-muted/30">
                     <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
-                            <DialogTitle className="text-xl font-semibold text-foreground leading-tight mb-2">
+                            <DialogTitle className="text-xl font-semibold text-foreground leading-tight mb-2 break-words">
                                 {email.subject}
                             </DialogTitle>
                             <div className="flex items-center gap-2 flex-wrap">
@@ -101,10 +101,10 @@ export function EmailDetailModal({ email, draft, isOpen, onClose }: EmailDetailM
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-baseline gap-2 flex-wrap">
-                                    <span className="font-semibold text-foreground">
+                                    <span className="font-semibold text-foreground break-words">
                                         {email.sender.split('<')[0].trim()}
                                     </span>
-                                    <span className="text-xs text-muted-foreground font-mono">
+                                    <span className="text-xs text-muted-foreground font-mono break-all">
                                         &lt;{email.sender.split('<')[1]?.replace('>', '') || email.sender}&gt;
                                     </span>
                                 </div>
@@ -117,13 +117,13 @@ export function EmailDetailModal({ email, draft, isOpen, onClose }: EmailDetailM
                         <Separator />
 
                         {/* Email Body */}
-                        <div className="prose prose-sm max-w-none">
+                        <div className="w-full overflow-hidden">
                             {loading ? (
                                 <div className="flex items-center justify-center py-8">
                                     <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
                                 </div>
                             ) : (
-                                <div className="whitespace-pre-wrap text-foreground/90 leading-relaxed">
+                                <div className="whitespace-pre-wrap text-foreground/90 leading-relaxed break-words overflow-wrap-anywhere w-full">
                                     {emailBody}
                                 </div>
                             )}
@@ -143,7 +143,7 @@ export function EmailDetailModal({ email, draft, isOpen, onClose }: EmailDetailM
                                             {draft.status}
                                         </Badge>
                                     </div>
-                                    <div className="whitespace-pre-wrap text-sm text-blue-900/80 dark:text-blue-100/80 leading-relaxed font-mono">
+                                    <div className="whitespace-pre-wrap text-sm text-blue-900/80 dark:text-blue-100/80 leading-relaxed font-mono break-words overflow-wrap-anywhere w-full">
                                         {draft.content}
                                     </div>
                                     <div className="flex items-center gap-2 mt-4">
