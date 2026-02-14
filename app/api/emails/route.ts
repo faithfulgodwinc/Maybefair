@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { GmailService, getBody, getHeader } from '@/lib/gmail/service'
 import { NextResponse } from 'next/server'
-import { google } from 'googleapis'
 
 export async function GET() {
     const supabase = await createClient()
