@@ -29,9 +29,16 @@ export async function syncEmailsAction() {
             if (existing) continue;
 
             const fullMsg = await gmail.getEmail('me', msg.id!);
-            const subject = getHeader(fullMsg.payload.headers, 'Subject');
-            const from = getHeader(fullMsg.payload.headers, 'From');
-            const snippet = fullMsg.snippet;
+
+            // Safely access payload with optional chaining and fallbacks
+            if (!fullMsg.payload) {
+                console.warn(`Email ${msg.id} has no payload, skipping`);
+                continue;
+            }
+
+            const subject = getHeader(fullMsg.payload?.headers || [], 'Subject') || 'No Subject';
+            const from = getHeader(fullMsg.payload?.headers || [], 'From') || 'Unknown Sender';
+            const snippet = fullMsg.snippet || '';
 
             let classification = { category: 'other', confidence: 0 };
             try {

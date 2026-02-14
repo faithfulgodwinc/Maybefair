@@ -27,9 +27,16 @@ export async function syncEmails(accessToken: string, userId: string) {
 
             // 3. Process new email
             const fullMsg = await gmail.getEmail('me', msg.id);
-            const subject = getHeader(fullMsg.payload.headers, 'Subject');
-            const from = getHeader(fullMsg.payload.headers, 'From');
-            const snippet = fullMsg.snippet;
+
+            // Safely access payload with optional chaining and fallbacks
+            if (!fullMsg.payload) {
+                console.warn(`⚠️  [SYNC] Email ${msg.id} has no payload, skipping`);
+                continue;
+            }
+
+            const subject = getHeader(fullMsg.payload?.headers || [], 'Subject') || 'No Subject';
+            const from = getHeader(fullMsg.payload?.headers || [], 'From') || 'Unknown Sender';
+            const snippet = fullMsg.snippet || '';
             // const body = getBody(fullMsg.payload); // Body can be large, maybe skip for now if not needed for classification immediately
 
             console.log('📧 [SYNC] Processing email:', { id: msg.id, subject: subject?.substring(0, 50) });

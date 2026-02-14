@@ -19,9 +19,16 @@ export async function GET() {
 
         for (const msg of messages) {
             const fullMsg = await gmail.getEmail('me', msg.id!)
-            const subject = getHeader(fullMsg.payload.headers, 'Subject')
-            const from = getHeader(fullMsg.payload.headers, 'From')
-            const snippet = fullMsg.snippet
+
+            // Safely access payload with optional chaining and fallbacks
+            if (!fullMsg.payload) {
+                console.warn(`Email ${msg.id} has no payload, skipping`);
+                continue;
+            }
+
+            const subject = getHeader(fullMsg.payload?.headers || [], 'Subject') || 'No Subject'
+            const from = getHeader(fullMsg.payload?.headers || [], 'From') || 'Unknown Sender'
+            const snippet = fullMsg.snippet || ''
             emails.push({ id: msg.id, subject, from, snippet })
         }
 
