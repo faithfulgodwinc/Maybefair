@@ -68,7 +68,7 @@ export default async function Login() {
                     <p className="text-[10px] text-muted-foreground/60 leading-relaxed max-w-xs mx-auto">
                         By continuing, you acknowledge that Maybefair uses AI to process your data for productivity enhancements.
                         <br className="hidden sm:block" />
-                        <a href="#" className="underline decoration-muted-foreground/40 hover:text-foreground hover:decoration-foreground transition-all">Terms</a> &bull; <a href="#" className="underline decoration-muted-foreground/40 hover:text-foreground hover:decoration-foreground transition-all">Privacy</a>
+                        <a href="#" className="underline decoration-muted-foreground/40 hover:text-foreground hover:decoration-foreground transition-all">Terms</a> &bull; <a href="/privacy" className="underline decoration-muted-foreground/40 hover:text-foreground hover:decoration-foreground transition-all">Privacy</a>
                     </p>
                 </div>
             </div>
