@@ -8,14 +8,18 @@ export class GmailService {
         this.auth.setCredentials({ access_token: accessToken })
     }
 
-    async listEmails(userId: string = 'me', query: string = 'is:unread', maxResults: number = 10) {
+    async listEmails(userId: string = 'me', query: string = 'is:unread', maxResults: number = 10, pageToken?: string) {
         const gmail = google.gmail({ version: 'v1', auth: this.auth })
         const res = await gmail.users.messages.list({
             userId,
             q: query,
             maxResults,
+            pageToken,
         })
-        return res.data.messages || []
+        return {
+            messages: res.data.messages || [],
+            nextPageToken: res.data.nextPageToken
+        }
     }
 
     async getEmail(userId: string = 'me', messageId: string) {

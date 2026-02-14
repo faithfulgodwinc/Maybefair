@@ -8,7 +8,7 @@ export async function syncEmails(accessToken: string, userId: string) {
 
     try {
         // 1. Fetch unread emails
-        const messages = await gmail.listEmails('me', 'is:unread', 10);
+        const { messages } = await gmail.listEmails('me', 'is:unread', 10);
         if (!messages || messages.length === 0) return { count: 0 };
 
         let count = 0;

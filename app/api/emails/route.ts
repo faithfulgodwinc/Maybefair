@@ -13,7 +13,7 @@ export async function GET() {
     const gmail = new GmailService(session.provider_token)
 
     try {
-        const messages = await gmail.listEmails('me', 'is:unread', 5)
+        const { messages } = await gmail.listEmails('me', 'is:unread', 5)
         const emails = []
 
         for (const msg of messages) {
