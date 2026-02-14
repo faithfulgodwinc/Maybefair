@@ -3,79 +3,106 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
-import { syncEmailsAction } from '@/app/actions/sync-emails';
+import { getUnreadMessageIds, syncBatch } from '@/app/actions/sync-emails';
 import confetti from 'canvas-confetti';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Progress } from '@/components/ui/progress';
 
 export function SyncButton() {
     const [isSyncing, setIsSyncing] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [progress, setProgress] = useState(0);
+    const [status, setStatus] = useState<string>('');
+    const [total, setTotal] = useState(0);
 
     const handleSync = async () => {
         setIsSyncing(true);
-        setError(null);
+        setProgress(5);
+        setStatus('Checking for emails...');
+
         try {
-            const result = await syncEmailsAction();
+            // 1. Get IDs
+            const result = await getUnreadMessageIds();
+
             if (result.error) {
-                setError(result.error);
-            } else {
-                // Success - Confetti!
-                console.log(`Synced ${result.count} emails`);
-                triggerConfetti();
+                console.error(result.error);
+                setStatus('Failed to connect');
+                setTimeout(() => setIsSyncing(false), 2000);
+                return;
             }
-        } catch (e) {
-            setError('An error occurred.');
-            console.error(e);
-        } finally {
-            setIsSyncing(false);
-        }
-    };
 
-    const triggerConfetti = () => {
-        const count = 200;
-        const defaults = {
-            origin: { y: 0.7 },
-            zIndex: 9999
-        };
+            const ids = result.ids || [];
 
-        function fire(particleRatio: number, opts: confetti.Options) {
+            if (ids.length === 0) {
+                setProgress(100);
+                setStatus('Up to date!');
+                setTimeout(() => setIsSyncing(false), 2000);
+                return;
+            }
+
+            setTotal(ids.length);
+            setStatus(`Found ${ids.length} new emails`);
+            setProgress(10);
+
+            // 2. Process in chunks
+            const CHUNK_SIZE = 5;
+            let processed = 0;
+
+            for (let i = 0; i < ids.length; i += CHUNK_SIZE) {
+                const chunk = ids.slice(i, i + CHUNK_SIZE);
+                setStatus(`Syncing ${processed + 1}-${Math.min(processed + chunk.length, ids.length)} of ${ids.length}...`);
+
+                await syncBatch(chunk);
+
+                processed += chunk.length;
+                setProgress(10 + (processed / ids.length) * 90);
+            }
+
+            setStatus('Done!');
+            setProgress(100);
             confetti({
-                ...defaults,
-                ...opts,
-                particleCount: Math.floor(count * particleRatio)
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
             });
+        } catch (err) {
+            console.error("Sync failed:", err);
+            setStatus('Sync failed!');
+            setProgress(0);
+        } finally {
+            // Keep status message for a bit, then reset
+            setTimeout(() => {
+                setIsSyncing(false);
+                setStatus('');
+                setProgress(0);
+            }, 2000);
         }
-
-        fire(0.25, { spread: 26, startVelocity: 55 });
-        fire(0.2, { spread: 60 });
-        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-        fire(0.1, { spread: 120, startVelocity: 45 });
     };
 
     return (
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col gap-2 w-full max-w-[200px]">
             <Button
-                onClick={handleSync}
                 variant="outline"
+                size="sm"
+                onClick={handleSync}
                 disabled={isSyncing}
-                className="relative overflow-hidden group border-primary/20 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300 h-11 sm:h-10 touch-manipulation"
+                className="gap-2 relative overflow-hidden transition-all duration-300"
             >
-                <motion.div
-                    animate={isSyncing ? { rotate: 360 } : { rotate: 0 }}
-                    transition={{ repeat: isSyncing ? Infinity : 0, duration: 1, ease: "linear" }}
-                    className="mr-2"
-                >
-                    <RefreshCw className="h-4 w-4 text-primary" />
-                </motion.div>
-                <span className="relative z-10 font-medium tracking-wide text-sm">
-                    {isSyncing ? 'Syncing...' : 'Sync Emails'}
-                </span>
-
-                {/* Subtle gradient background shine effect on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                {isSyncing ? (status || 'Syncing...') : 'Sync Emails'}
             </Button>
-            {error && <p className="text-xs text-red-500 mt-1 absolute top-full right-0">{error}</p>}
+
+            <AnimatePresence>
+                {isSyncing && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="w-full"
+                    >
+                        <Progress value={progress} className="h-1.5 w-full mt-2" />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
