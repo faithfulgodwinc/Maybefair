@@ -28,7 +28,7 @@ export default function SettingsPage() {
 
     return (
         <div className="space-y-8 max-w-5xl mx-auto">
-            <div className="flex items-end justify-between border-b border-border/40 pb-6">
+            <div className="flex items-end justify-between border-b border-border/40 pb-6 mt-12 sm:mt-0">
                 <div className="space-y-1">
                     <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-2">
                         <Settings className="h-6 w-6 text-primary" />

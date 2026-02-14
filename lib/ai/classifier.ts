@@ -24,17 +24,27 @@ export async function classifyEmail(subject: string, snippet: string): Promise<C
   `;
 
     try {
+        console.log('🔍 [CLASSIFIER] Starting classification for:', { subject: subject.substring(0, 50) });
+        console.log('📤 [CLASSIFIER] Sending prompt to Gemini (first 200 chars):', prompt.substring(0, 200));
+
         const text = await generateContentWithFallback(prompt, {
             responseMimeType: "application/json"
         });
 
+        console.log('📥 [CLASSIFIER] Raw Gemini response:', text);
+
         const classification = JSON.parse(text) as ClassificationResult;
+
+        console.log('✅ [CLASSIFIER] Parsed classification:', classification);
+        console.log('🏷️  [CLASSIFIER] Category:', classification.category, '| Confidence:', classification.confidence);
+
         return classification;
     } catch (error) {
-        console.error('Classification error:', error);
+        console.error('❌ [CLASSIFIER] Classification error:', error);
+        console.error('⚠️  [CLASSIFIER] Using fallback: category=other, confidence=0');
 
         // Log available models for debugging if it failed
-        listAvailableModels().then(models => console.log("Available models:", models));
+        listAvailableModels().then(models => console.log("📋 [CLASSIFIER] Available models:", models));
 
         return { category: 'other', confidence: 0 };
     }

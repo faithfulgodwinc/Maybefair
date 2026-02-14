@@ -32,10 +32,24 @@ export async function syncEmails(accessToken: string, userId: string) {
             const snippet = fullMsg.snippet;
             // const body = getBody(fullMsg.payload); // Body can be large, maybe skip for now if not needed for classification immediately
 
+            console.log('📧 [SYNC] Processing email:', { id: msg.id, subject: subject?.substring(0, 50) });
+
             // 4. Classify
             const classification = await classifyEmail(subject, snippet || '');
 
+            console.log('🏷️  [SYNC] Classification result:', {
+                subject: subject?.substring(0, 50),
+                category: classification.category,
+                confidence: classification.confidence
+            });
+
             // 5. Store
+            console.log('💾 [SYNC] Saving to database:', {
+                id: msg.id,
+                category: classification.category,
+                confidence: classification.confidence
+            });
+
             const { error } = await supabase.from('emails').insert({
                 id: msg.id,
                 user_id: userId,
@@ -49,12 +63,14 @@ export async function syncEmails(accessToken: string, userId: string) {
             });
 
             if (error) {
-                console.error('Failed to insert email:', error);
+                console.error('❌ [SYNC] Failed to insert email:', error);
             } else {
+                console.log('✅ [SYNC] Email saved successfully:', msg.id);
                 count++;
             }
         }
 
+        console.log('🎉 [SYNC] Sync complete! Total emails synced:', count);
         return { count };
 
     } catch (error) {

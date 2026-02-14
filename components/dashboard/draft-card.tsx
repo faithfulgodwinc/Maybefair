@@ -73,7 +73,7 @@ export function DraftCard({ draft }: { draft: Draft }) {
 
     return (
         <Card className={`relative transition-all duration-200 ${isEditing ? 'ring-1 ring-primary shadow-md' : 'shadow-none border border-border/60 hover:border-border'}`}>
-            <CardHeader className="pb-3 pt-4 px-5 border-b border-border/30">
+            <CardHeader className="pb-3 pt-4 px-4 sm:px-5 border-b border-border/30">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         {/* Status label handled by parent now or inside here differently? Keeping simple. */}
@@ -83,14 +83,14 @@ export function DraftCard({ draft }: { draft: Draft }) {
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={handleDelete} disabled={loading}>
-                            <Trash2 className="h-3.5 w-3.5" />
+                    <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                        <Button variant="ghost" size="icon" className="h-9 w-9 sm:h-7 sm:w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 touch-manipulation" onClick={handleDelete} disabled={loading}>
+                            <Trash2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
                         </Button>
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="px-5 pb-5 pt-4">
+            <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5 pt-4">
                 {isEditing ? (
                     <Textarea
                         value={content}
@@ -103,7 +103,7 @@ export function DraftCard({ draft }: { draft: Draft }) {
                     </div>
                 )}
 
-                <div className="mt-4 flex items-center justify-between pt-2">
+                <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 pt-2">
                     <div className="text-[10px] text-muted-foreground font-medium">
                         <ClientDate date={draft.created_at} />
                     </div>
@@ -111,21 +111,21 @@ export function DraftCard({ draft }: { draft: Draft }) {
                     <div className="flex items-center gap-2">
                         {isEditing ? (
                             <>
-                                <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} disabled={loading} className="h-8 text-xs">
-                                    <X className="mr-1.5 h-3 w-3" /> Cancel
+                                <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} disabled={loading} className="h-11 sm:h-8 text-sm sm:text-xs flex-1 sm:flex-none touch-manipulation">
+                                    <X className="mr-1.5 h-4 w-4 sm:h-3 sm:w-3" /> Cancel
                                 </Button>
-                                <Button variant="secondary" size="sm" onClick={() => setIsEditing(false)} disabled={loading} className="h-8 text-xs bg-sidebar-accent text-sidebar-foreground border border-border">
-                                    <Save className="mr-1.5 h-3 w-3" /> Save
+                                <Button variant="secondary" size="sm" onClick={() => setIsEditing(false)} disabled={loading} className="h-11 sm:h-8 text-sm sm:text-xs bg-sidebar-accent text-sidebar-foreground border border-border flex-1 sm:flex-none touch-manipulation">
+                                    <Save className="mr-1.5 h-4 w-4 sm:h-3 sm:w-3" /> Save
                                 </Button>
                             </>
                         ) : (
-                            <Button variant="outline" size="sm" onClick={() => setIsEditing(true)} disabled={loading} className="h-8 text-xs border-dashed">
-                                <Edit2 className="mr-1.5 h-3 w-3" /> Edit
+                            <Button variant="outline" size="sm" onClick={() => setIsEditing(true)} disabled={loading} className="h-11 sm:h-8 text-sm sm:text-xs border-dashed flex-1 sm:flex-none touch-manipulation">
+                                <Edit2 className="mr-1.5 h-4 w-4 sm:h-3 sm:w-3" /> Edit
                             </Button>
                         )}
 
-                        <Button variant="default" size="sm" onClick={handleSend} disabled={loading} className="h-8 text-xs px-4 shadow-sm hover:shadow-md transition-shadow bg-primary text-primary-foreground">
-                            {loading ? <Loader2 className="mr-1.5 h-3 w-3 animate-spin" /> : <Send className="mr-1.5 h-3 w-3" />}
+                        <Button variant="default" size="sm" onClick={handleSend} disabled={loading} className="h-11 sm:h-8 text-sm sm:text-xs px-4 sm:px-4 shadow-sm hover:shadow-md transition-shadow bg-primary text-primary-foreground flex-1 sm:flex-none touch-manipulation">
+                            {loading ? <Loader2 className="mr-1.5 h-4 w-4 sm:h-3 sm:w-3 animate-spin" /> : <Send className="mr-1.5 h-4 w-4 sm:h-3 sm:w-3" />}
                             Send Now
                         </Button>
                     </div>

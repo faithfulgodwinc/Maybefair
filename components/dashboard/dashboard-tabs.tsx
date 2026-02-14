@@ -18,6 +18,12 @@ export function DashboardTabs({ emails, drafts }: DashboardTabsProps) {
     const categorizedEmails = (category: string) =>
         (emails || []).filter((e) => e.category === category);
 
+    const getCategoryCount = (tabId: string) => {
+        if (tabId === "all") return emails?.length || 0;
+        if (tabId === "drafts") return drafts?.length || 0;
+        return categorizedEmails(tabId).length;
+    };
+
     const tabs = [
         { id: "all", label: "All" },
         { id: "urgent", label: "Urgent" },
@@ -40,7 +46,17 @@ export function DashboardTabs({ emails, drafts }: DashboardTabsProps) {
                                 activeTab === tab.id ? "text-primary" : "text-muted-foreground"
                             )}
                         >
-                            {tab.label}
+                            <span className="flex items-center gap-2">
+                                {tab.label}
+                                <span className={cn(
+                                    "text-xs font-mono px-1.5 py-0.5 rounded",
+                                    activeTab === tab.id
+                                        ? "bg-primary/10 text-primary"
+                                        : "bg-muted text-muted-foreground"
+                                )}>
+                                    {getCategoryCount(tab.id)}
+                                </span>
+                            </span>
                             {activeTab === tab.id && (
                                 <motion.div
                                     layoutId="activeTab"

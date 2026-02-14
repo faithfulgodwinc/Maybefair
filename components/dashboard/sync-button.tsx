@@ -59,7 +59,7 @@ export function SyncButton() {
                 onClick={handleSync}
                 variant="outline"
                 disabled={isSyncing}
-                className="relative overflow-hidden group border-primary/20 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                className="relative overflow-hidden group border-primary/20 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300 h-11 sm:h-10 touch-manipulation"
             >
                 <motion.div
                     animate={isSyncing ? { rotate: 360 } : { rotate: 0 }}
@@ -68,7 +68,7 @@ export function SyncButton() {
                 >
                     <RefreshCw className="h-4 w-4 text-primary" />
                 </motion.div>
-                <span className="relative z-10 font-medium tracking-wide">
+                <span className="relative z-10 font-medium tracking-wide text-sm">
                     {isSyncing ? 'Syncing...' : 'Sync Emails'}
                 </span>
 
