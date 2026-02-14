@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from './button';
 
+// Premium delete confirmation modal with smooth animations
+
 interface DeleteConfirmationModalProps {
     isOpen: boolean;
     onClose: () => void;
