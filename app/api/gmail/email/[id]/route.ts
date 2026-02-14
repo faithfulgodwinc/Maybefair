@@ -4,7 +4,7 @@ import { GmailService, getBody } from '@/lib/gmail/service';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const supabase = await createClient();
@@ -24,7 +24,9 @@ export async function GET(
             return NextResponse.json({ error: 'No access token' }, { status: 401 });
         }
 
-        const emailId = params.id;
+        // Await params (Next.js 15 requirement)
+        const { id } = await params;
+        const emailId = id;
 
         console.log('📧 [EMAIL-DETAIL] Fetching email:', emailId);
 
