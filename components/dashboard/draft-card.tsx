@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { deleteDraftAction, sendDraftAction } from '@/app/actions/draft-ops';
 import { Loader2, Send, Trash2, Edit2, Save, X } from 'lucide-react';
+import { DeleteConfirmationModal } from '@/components/ui/delete-confirmation-modal';
 
 interface Draft {
     id: string;
@@ -21,14 +22,15 @@ export function DraftCard({ draft }: { draft: Draft }) {
     const [isEditing, setIsEditing] = useState(false);
     const [content, setContent] = useState(draft.content);
     const [loading, setLoading] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const { toast } = useToast();
 
     const handleDelete = async () => {
-        if (!confirm('Are you sure you want to delete this draft?')) return;
         setLoading(true);
         await deleteDraftAction(draft.id);
         setLoading(false);
+        setShowDeleteModal(false);
         toast({
             title: "Draft deleted",
             description: "The draft has been permanently deleted.",
@@ -84,7 +86,7 @@ export function DraftCard({ draft }: { draft: Draft }) {
                     </div>
 
                     <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" className="h-9 w-9 sm:h-7 sm:w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 touch-manipulation" onClick={handleDelete} disabled={loading}>
+                        <Button variant="ghost" size="icon" className="h-9 w-9 sm:h-7 sm:w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 touch-manipulation" onClick={() => setShowDeleteModal(true)} disabled={loading}>
                             <Trash2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
                         </Button>
                     </div>
@@ -131,6 +133,14 @@ export function DraftCard({ draft }: { draft: Draft }) {
                     </div>
                 </div>
             </CardContent>
+
+            {/* Delete Confirmation Modal */}
+            <DeleteConfirmationModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={handleDelete}
+                loading={loading}
+            />
         </Card>
     );
 }
