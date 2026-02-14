@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { PenTool, Loader2, Volume2, VolumeX } from 'lucide-react';
 import { generateDraftAction } from '@/app/actions/generate-draft';
 import { DraftCard } from './draft-card';
+import { DraftStageIndicator } from './draft-stage-indicator';
 import { useSpeech } from '@/lib/hooks/use-speech';
 import { EmailDetailModal } from './email-detail-modal';
 
@@ -73,10 +74,12 @@ export function EmailCard({ email, initialDraft }: { email: Email, initialDraft?
     return (
         <>
             <Card
-                className="group relative overflow-hidden bg-card transition-all duration-200 hover:shadow-md border-border/60 cursor-pointer"
-                onClick={() => setIsModalOpen(true)}
+                className="group relative overflow-hidden bg-card transition-all duration-200 hover:shadow-md border-border/60"
             >
-                <div className={`p-4 sm:p-5 transition-colors ${draft ? 'bg-muted/10' : ''}`}>
+                <div
+                    className={`p-4 sm:p-5 transition-colors cursor-pointer ${draft ? 'bg-muted/10' : ''}`}
+                    onClick={() => setIsModalOpen(true)}
+                >
                     <div className="flex items-start justify-between gap-3 sm:gap-4 mb-3">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
                             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border whitespace-nowrap ${getBadgeVariant(email.category) === 'destructive' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
@@ -145,10 +148,7 @@ export function EmailCard({ email, initialDraft }: { email: Email, initialDraft?
                 {(draft || loading) && (
                     <div className="border-t border-border/50 bg-secondary/30 px-5 py-4">
                         {loading && (
-                            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground animate-pulse py-2">
-                                <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
-                                <span>ANALYZING & DRAFTING...</span>
-                            </div>
+                            <DraftStageIndicator />
                         )}
                         {draft && !loading && (
                             <div className="animate-in fade-in slide-in-from-top-1 duration-200">
