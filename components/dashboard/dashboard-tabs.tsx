@@ -35,38 +35,41 @@ export function DashboardTabs({ emails, drafts }: DashboardTabsProps) {
 
     return (
         <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <div className="relative">
-                <TabsList className="bg-transparent border-b border-border/40 w-full justify-start h-auto p-0 gap-6 rounded-none">
-                    {tabs.map((tab) => (
-                        <TabsTrigger
-                            key={tab.id}
-                            value={tab.id}
-                            className={cn(
-                                "relative bg-transparent h-10 px-0 pb-3 text-sm font-medium transition-colors data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none hover:text-primary/80 rounded-none border-b-2 border-transparent",
-                                activeTab === tab.id ? "text-primary" : "text-muted-foreground"
-                            )}
-                        >
-                            <span className="flex items-center gap-2">
-                                {tab.label}
-                                <span className={cn(
-                                    "text-xs font-mono px-1.5 py-0.5 rounded",
-                                    activeTab === tab.id
-                                        ? "bg-primary/10 text-primary"
-                                        : "bg-muted text-muted-foreground"
-                                )}>
-                                    {getCategoryCount(tab.id)}
+            {/* Scrollable container for mobile */}
+            <div className="relative -mx-4 sm:mx-0">
+                <div className="overflow-x-auto scrollbar-hide px-4 sm:px-0">
+                    <TabsList className="bg-transparent border-b border-border/40 w-max sm:w-full justify-start h-auto p-0 gap-3 sm:gap-6 rounded-none">
+                        {tabs.map((tab) => (
+                            <TabsTrigger
+                                key={tab.id}
+                                value={tab.id}
+                                className={cn(
+                                    "relative bg-transparent h-10 px-0 pb-3 text-sm font-medium transition-colors data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none hover:text-primary/80 rounded-none border-b-2 border-transparent whitespace-nowrap",
+                                    activeTab === tab.id ? "text-primary" : "text-muted-foreground"
+                                )}
+                            >
+                                <span className="flex items-center gap-2">
+                                    {tab.label}
+                                    <span className={cn(
+                                        "text-xs font-mono px-1.5 py-0.5 rounded",
+                                        activeTab === tab.id
+                                            ? "bg-primary/10 text-primary"
+                                            : "bg-muted text-muted-foreground"
+                                    )}>
+                                        {getCategoryCount(tab.id)}
+                                    </span>
                                 </span>
-                            </span>
-                            {activeTab === tab.id && (
-                                <motion.div
-                                    layoutId="activeTab"
-                                    className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]"
-                                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                />
-                            )}
-                        </TabsTrigger>
-                    ))}
-                </TabsList>
+                                {activeTab === tab.id && (
+                                    <motion.div
+                                        layoutId="activeTab"
+                                        className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+                                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                    />
+                                )}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                </div>
             </div>
 
             <AnimatePresence mode="wait">
