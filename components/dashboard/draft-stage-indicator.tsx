@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, FileSearch, Sparkles, CheckCircle2 } from 'lucide-react';
 
+// Progressive stage indicator for draft generation with continuous animation
+
 interface Stage {
     id: number;
     icon: React.ElementType;
