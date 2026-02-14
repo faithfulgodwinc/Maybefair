@@ -71,7 +71,7 @@ export function EmailDetailModal({ email, draft, isOpen, onClose }: EmailDetailM
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-3xl max-h-[90vh] p-0 gap-0 rounded-2xl overflow-hidden">
+            <DialogContent className="w-full max-w-3xl max-h-[90vh] p-0 gap-0 rounded-2xl">
                 {/* Header */}
                 <DialogHeader className="px-6 py-4 border-b border-border/40 bg-muted/30">
                     <div className="flex items-start justify-between gap-4">
@@ -93,7 +93,7 @@ export function EmailDetailModal({ email, draft, isOpen, onClose }: EmailDetailM
 
                 {/* Email Content */}
                 <ScrollArea className="flex-1 max-h-[calc(90vh-200px)]">
-                    <div className="px-6 py-4 space-y-6">
+                    <div className="px-8 py-6 space-y-6">
                         {/* Sender Info */}
                         <div className="flex items-start gap-3">
                             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -123,7 +123,7 @@ export function EmailDetailModal({ email, draft, isOpen, onClose }: EmailDetailM
                                     <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
                                 </div>
                             ) : (
-                                <div className="whitespace-pre-wrap text-foreground/90 leading-relaxed break-words overflow-wrap-anywhere w-full">
+                                <div className="whitespace-pre-wrap text-foreground/90 leading-relaxed break-all overflow-wrap-anywhere w-full pr-2">
                                     {emailBody}
                                 </div>
                             )}
