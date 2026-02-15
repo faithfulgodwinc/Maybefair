@@ -28,7 +28,6 @@ Maybefair is an intelligent email management system that leverages AI to automat
 
 ### User Experience
 - **Premium UI/UX** - Executive-level design with smooth animations
-- **Dark Mode Support** - Elegant dark theme throughout
 - **Responsive Design** - Optimized for desktop and mobile
 - **Real-time Updates** - Live sync status and notifications
 - **Delete Confirmation** - Premium modal for safe draft deletion
